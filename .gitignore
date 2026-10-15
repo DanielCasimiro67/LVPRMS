@@ -1,0 +1,22 @@
+# Local agent progress and temporary review files
+/.superpowers/
+/tmp/
+
+# Generated exports (the current team BRD is kept in docs/)
+/output/
+
+# Historical Figma authoring scripts and generated inspection data
+/docs/superpowers/qa/*.js
+/docs/superpowers/qa/*.json
+
+# Dependencies, logs, local settings and secrets
+node_modules/
+*.log
+.env
+.env.*
+!.env.example
+
+# Operating-system metadata
+.DS_Store
+Thumbs.db
+Desktop.ini

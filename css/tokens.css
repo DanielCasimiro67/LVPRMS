@@ -1,0 +1,12 @@
+@font-face{font-family:'Open Sans';src:url('../assets/fonts/open-sans-regular.ttf') format('truetype');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Open Sans';src:url('../assets/fonts/open-sans-semibold.ttf') format('truetype');font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:'Open Sans';src:url('../assets/fonts/open-sans-bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:swap}
+:root{
+  --font:'Open Sans',Arial,sans-serif;
+  --primary:#0369a1;--hover:#075985;--surface:#fff;--canvas:#f5f8fc;--text:#0f172a;--muted:#475569;
+  --border:#cbd5e1;--subtle:#e2e8f0;--selected:#e0f2fe;--info-bg:#eff6ff;--success:#047857;--success-bg:#ecfdf5;
+  --error:#b91c1c;--error-bg:#fef2f2;--warning:#92400e;--warning-bg:#fffbeb;--focus:#0284c7;
+  --space-4:4px;--space-8:8px;--space-12:12px;--space-16:16px;--space-24:24px;--space-32:32px;--space-48:48px;
+  --radius-control:8px;--radius-card:12px;--shadow-card:0 3px 12px rgba(15,23,42,.05);
+  --sidebar-width:232px;--button-height:44px;--input-height:48px;
+}
