@@ -309,3 +309,51 @@ These do not prevent designing representative screens. They remain explicit assu
 - Screen details, data structure, and UX foundations remain proposed until written-spec review.
 - No product code, Figma changes, production integrations, or completed acceptance tests are claimed.
 
+
+## Frontend meeting revision status — 19 October 2026
+
+The project owner authorized a staged frontend revision sequence: see [active task sequence](superpowers/plans/2026-10-19-frontend-meeting-revisions.md) and [change register](change-requests/2026-10-18.md). This note describes the working frontend and does not establish client approval of a revised BRD baseline.
+
+Implemented Revision1: Today shows an ID-shaped scan hero, ID scanned/ID not found feedback and automatic visit/registration navigation. Unknown identifiers are carried to registration without creating a patient; ambiguous IDs require selection. Manual school-ID and name lookup remain available. A scan alone does not save an encounter, discharge, deduct stock or send email.
+
+Confirmed but not implemented in Revision1: second tap opens a quick discharge confirmation; actual transfer checks out the patient, while messaging a doctor for advice does not. Department-led registration/incomplete records, editing/limits, discharge, transfer and account polish follow as separate reviewable tasks. Desktop1440x960 only.
+
+### Revision 2 frontend checkpoint
+
+Department replaces manual patient-type selection. Higher ed/Basic ed infer Student; Staff or school-ID-only infer Staff; explicit No school department with no entered school identifiers yields Visitor. An unknown card alone is unclassified. Student identity/education fields must be provided to save; missing emergency name/number permits an incomplete save. Personal contact and relationship are optional.
+
+Patient lists/records show completion status and missing details. Edit details completes the same patient and preserves authored before/after history, school mappings and clinical history. School-managed identity stays read-only; local school lookup is a fictional identity-only demonstration. No backend, MIS connection, phone/tablet work or production authorization is claimed. See superpowers/qa/2026-10-19-meeting-revision2-desktop.md.
+
+### Revision 3 frontend checkpoint
+
+Patient details edits, existing follow-up-note edits and visit correction entry first confirm the selected patient using a unique matching RFID, school ID or local Patient ID. Confirmation is temporary, makes no clinical write and does not replace the active operator session required on save. Visitor records support local Patient ID confirmation. New notes and ongoing care keep their existing quick entry flow.
+
+All note textareas now share a configurable 2,000-character prototype limit, counters and blank/over-limit validation. Over-limit pasted or legacy text is retained rather than truncated; explicit corrections preserve the full previous text and original author/time. Unsaved-note navigation warns; only one note editor is active at a time. Backend parity and production permissions remain deferred. Desktop1440x960 only. See superpowers/qa/2026-10-19-meeting-revision3-desktop.md; Revision4 is not started.
+
+### Revision 4 frontend checkpoint
+
+Quick visit entry now groups complaint/state and optional medicine/supply quantities. Empty vitals/assessment/treatment sections are collapsed, while saved details stay visible. Arrival time uses the draft’s creation time and the saving operator is retained as clinical author. Saving care and completing care remain separate, explicit actions.
+
+Today scan → unique patient with saved active visit → Discharge patient confirmation. No active visit → unsaved form/draft. Unknown → registration; ambiguous → explicit recovery. No scan alone changes encounter state. Outcome is required; optional final notes retain the shared limit/counter. Keep in clinic/Escape make no write. Confirm discharge creates one completed encounter and pending nurse summary, with status/view link. Duplicate scans and implicit submits cannot confirm. Manual Discharge on Today supports patients without cards. Unsaved care blocks quick completion and offers review; stale/failed saves preserve entered values. Referral follow-up remains open and inventory unchanged. See superpowers/qa/2026-10-19-meeting-revision4-desktop.md. Frontend only, desktop1440x960; stop before Revision5.
+
+### Revision 5 frontend checkpoint
+
+Record contact, reply, ordinary action and resolution update referral history only. The patient remains active until explicit visit completion or actual-transfer checkout. The referral shows clinic/checkout status separately from follow-up status, with secondary log actions grouped under Other follow-up actions.
+
+Record actual transfer → destination facility + optional notes + actual-departure confirmation → Confirm transfer and checkout. Transfer time/operator are captured at confirmation. A doctor reply is not required for urgent transfer. In one local storage commit, the saved visit completes as Referred to an external facility, the referral gains an authored transfer activity and one pending simulated nurse summary includes the destination. The referral state stays unchanged. Unsaved care requires review first; stale/failed saves preserve entered values. Duplicate requests cannot create a second checkout/email. Previously completed encounters are not rewritten as new transfers.
+
+The transferred patient leaves Today’s active list; pending follow-up remains available for late reply, care action and resolution. These operations never reopen the completed encounter or rewrite the original summary/attempts. Print summary includes the transfer and subsequent authored activities. See superpowers/qa/2026-10-19-meeting-revision5-desktop.md. Frontend only, desktop1440x960; stop before Revision6.
+
+### Revision 6 frontend checkpoint
+
+My account → read-only username + Change password. No username-edit action or administrator workspace is introduced. Current, new and confirmation fields start masked with individual keyboard-operable Show/Hide eye controls; login uses the same control. Submit re-masks values. Failed validation retains entries and focuses the relevant field; success clears/re-masks fields. Current password, eight-character minimum, nonblank/different new password and matching confirmation are required. Recheck operator/session before applying an asynchronous change. Demo password changes remain in memory and reset on reload; the UI explains this limit.
+
+Today shares patient-description formatting with records/visits, including higher-ed program/year. The old unknown-card recovery route uses current registration wording and name search. Unlinked referrals state Visit not linked instead of asserting active care. Desktop checks cover Today, Patients, Referrals, Messages, account, session expiry, search-empty recovery and honest deferred Inventory/Reports pages. See superpowers/qa/2026-10-19-meeting-revision6-desktop.md. Frontend only, desktop1440x960; stop before inventory/reports. No backend, production RBAC or phone/tablet acceptance claimed.
+
+### Task 6 frontend checkpoint
+
+Inventory → search/all/low stock → Open stock history → Add stock or Adjust stock. Addition records incoming quantity; adjustment records the counted final balance. Both require a reason, use item-specific quantity steps and preserve actor/time/running balance. Failed/stale writes retain entered work; navigation offers Keep editing/Discard changes. Existing visits establish a usage baseline at activation without retroactive deductions. New saved care deducts once; corrections reconcile only changes, including returns. Insufficient stock rejects the entire save. Discharge/transfer cannot deduct the same care twice.
+
+Reports → date range, patient type and complaint → Apply filters or Print daily log. Monthly, complaint and frequent-patient reports provide the same filters and standalone printing. Counts come from saved ongoing/completed encounters, never drafts; inclusive dates use Philippine arrival date. Patient groups use current patient records; visitor rows have no school fields. Frequent patients ranks all matching patients by visit count. Print / Save PDF uses the browser and hides controls/navigation; multipage tables repeat their headers. Initial daily range is today; other reports start at the current month.
+
+Task6 supersedes earlier deferred Inventory/Reports pages. Frontend only, desktop1440x960. See superpowers/qa/2026-10-19-task6-desktop.md. No backend or phone/tablet work; stop after this checkpoint.

@@ -19,6 +19,7 @@ test('dev server chooses a free port when requested port is busy and serves only
     assert.notEqual(new URL(url).port,String(port));
     const response=await fetch(url);assert.equal(response.status,200);assert.match(await response.text(),/id="app"/);
     assert.equal((await fetch(url+'package.json')).status,404);
+    assert.equal((await fetch(url+'demo.html')).status,200);
     assert.equal(stderr,'');
   }finally{
     if(child.exitCode===null){const exit=once(child,'exit');child.kill();await exit;}

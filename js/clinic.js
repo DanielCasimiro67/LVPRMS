@@ -1,3 +1,4 @@
+import {validateNote} from './note-rules.js';
 export class ClinicError extends Error{
   constructor(code,message,details={}){super(message);this.code=code;this.details=details;}
 }
@@ -5,7 +6,7 @@ const clean=v=>String(v??'').trim();
 const key=v=>clean(v).toLocaleLowerCase();
 const id=()=>crypto.randomUUID();
 const person=(s,patientId)=>{const p=s.patients.find(p=>p.id===patientId);if(!p)throw new ClinicError('PATIENT_MISSING','This patient record could not be found.');return p;};
-export const patientDescription=p=>p.type==='student'?['Student',p.grade,p.section].filter(Boolean).join(' · '):p.type==='staff'?['Staff',p.department].filter(Boolean).join(' · '):'Visitor';
+export const patientDescription=p=>p.type==='student'?['Student',p.program,p.year,p.grade,p.section].filter(Boolean).join(' · '):p.type==='staff'?['Staff',p.department].filter(Boolean).join(' · '):'Visitor';
 export function identityRecords(s){return s.schoolIdentities??s.patients.filter(p=>p.type!=='visitor'&&p.schoolId).map(p=>({sourceId:p.id==='mara'?'school-mara':p.id==='leo'?'school-leo':null,patientId:p.id,schoolId:p.schoolId,cards:p.id==='mara'?['RFID-1001']:p.id==='leo'?['RFID-1002']:[]}));}
 export function identifyPatient(s,value){
   const query=key(value);if(!query)return {status:'unknown',candidates:[]};
@@ -25,9 +26,13 @@ export function registerPatient(s,input,actor,now){
   if(exact)throw new ClinicError('DUPLICATE_ID','This school ID already belongs to a patient. Open their existing record.',{candidates:[exact]});
   const candidates=s.patients.filter(p=>key(p.name)===key(name));
   if(candidates.length&&!clean(input.duplicateReason))throw new ClinicError('POSSIBLE_DUPLICATE','A patient with this name already exists. Check the records before registering separately.',{candidates});
+  const rfid=clean(input.rfid),mappings=structuredClone(identityRecords(s));
+  if(rfid&&type==='visitor')throw new ClinicError('SCHOOL_CARD_TYPE','This card is for a school patient. Check the patient’s school details before linking it.');
+  const cardOwner=rfid&&mappings.find(r=>key(r.schoolId)===key(rfid)||(r.cards||[]).some(card=>key(card)===key(rfid)));
+  if(cardOwner)throw new ClinicError('DUPLICATE_RFID','This RFID already belongs to a patient. Open the existing record.',{candidates:s.patients.filter(p=>p.id===cardOwner.patientId)});
   const patient={id:id(),name,type,contact:clean(input.contact),createdAt:now,registeredBy:actor.name,notes:[]};
   if(type!=='visitor'){patient.schoolId=schoolId;patient.provisional=true;if(type==='student'){patient.grade=clean(input.grade);patient.section=clean(input.section);}else patient.department=clean(input.department);}
-  s.patients.push(patient);s.audit.push({action:'register-patient',patientId:patient.id,actor:actor.name,at:now,reason:clean(input.duplicateReason)});return patient;
+  s.patients.push(patient);if(rfid){s.schoolIdentities=mappings;s.schoolIdentities.push({sourceId:null,patientId:patient.id,schoolId,cards:[rfid]});}s.audit.push({action:'register-patient',patientId:patient.id,actor:actor.name,at:now,reason:clean(input.duplicateReason)});return patient;
 }
 export function startOrResumeVisit(s,patientId,actor,now){
   person(s,patientId);const visits=s.visits.filter(v=>v.patientId===patientId&&v.state!=='Completed');
@@ -53,10 +58,12 @@ export function saveIntakeDraft(s,patientId,input,actor,now){
   delete s.drafts[patientId];s.audit.push({action:'save-intake',visitId:visit.id,actor:actor.name,at:now});return visit;
 }
 export function addPatientNote(s,patientId,text,actor,now){
+  validateNote(text,{required:true,label:'Follow-up note'});
   const p=person(s,patientId);if(!clean(text))throw new ClinicError('NOTE_REQUIRED','Enter a follow-up note before saving.');
   (p.notes??=[]).push({id:id(),text:clean(text),author:actor.name,at:now});
 }
 export function editPatientNote(s,patientId,noteId,text,actor,now){
+  validateNote(text,{required:true,label:'Follow-up note'});
   const note=(person(s,patientId).notes||[]).find(n=>n.id===noteId);
   if(!note)throw new ClinicError('NOTE_MISSING','This follow-up note could not be found. Reload the patient record.');
   if(!clean(text))throw new ClinicError('NOTE_REQUIRED','Enter a follow-up note before saving.');

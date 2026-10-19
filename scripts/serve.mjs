@@ -14,7 +14,7 @@ const server=http.createServer(async(req,res)=>{
   try{
     const url=new URL(req.url,'http://127.0.0.1');
     const pathname=decodeURIComponent(url.pathname);
-    if(pathname!=='/'&&pathname!=='/index.html'&&!/^\/(css|js|assets)\/[A-Za-z0-9_./-]+$/.test(pathname)){res.writeHead(404);res.end('Not found');return;}
+    if(pathname!=='/'&&pathname!=='/index.html'&&pathname!=='/demo.html'&&!/^\/(css|js|assets)\/[A-Za-z0-9_./-]+$/.test(pathname)){res.writeHead(404);res.end('Not found');return;}
     const filename=path.resolve(root,'.'+(pathname==='/'?'/index.html':pathname));
     if(!filename.startsWith(root)||pathname.split('/').includes('..')){res.writeHead(404);res.end('Not found');return;}
     const data=await readFile(filename);

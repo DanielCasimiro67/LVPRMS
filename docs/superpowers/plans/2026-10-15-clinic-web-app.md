@@ -1,14 +1,16 @@
 # LVCC Clinic Frontend Implementation Plan
 
+Active work after Task 5: the [October 19 meeting-revision sequence](2026-10-19-frontend-meeting-revisions.md). Original Task 6 waits behind those revisions. Historical task results below are retained.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans for native execution after the user reviews this plan and selects execution. Do not delegate without user authorization. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Turn the current responsive clinic Figma design into a working, local, browser-based prototype matching BRD v2.2.0 and the user's supplied Build Web Apps brief.
+**Goal:** Turn the current responsive clinic Figma design into a working, local, browser-based prototype matching BRD v2.2.1 and the user's supplied Build Web Apps brief.
 
 **Architecture:** Use semantic HTML, reusable CSS components, and native JavaScript modules. A hash router renders clinic screens; a transactional localStorage repository owns fictional records, revisions, stock movements, and message events. Mock adapters simulate school identities, card lookup, sign-in, and message delivery without contacting external services.
 
 **Tech Stack:** HTML, CSS, vanilla JavaScript; no frontend framework, package dependencies, or build step. Use the bundled Node runtime for domain tests and a static HTTP server for browser verification.
 
-**Spec:** The user-supplied Build Web Apps brief in `C:/Users/daniel/.codex/attachments/5f2a0611-279c-4fed-b46e-9ecae353bb72/Pasted text.txt`; `docs/BRD.md` v2.2.0. `docs/System_Flow_and_UX_Specification.md` v0.1 supplies compatible workflow detail only; latest user instructions and BRD supersede its administrative scope and older storage assumptions.
+**Spec:** The user-supplied Build Web Apps brief in `C:/Users/daniel/.codex/attachments/5f2a0611-279c-4fed-b46e-9ecae353bb72/Pasted text.txt`; `docs/BRD.md` v2.2.1. `docs/System_Flow_and_UX_Specification.md` v0.1 supplies compatible workflow detail only; latest user instructions and BRD supersede its administrative scope and older storage assumptions.
 
 ## Status and implementation audit
 
@@ -106,48 +108,56 @@ Task 2 verification: 23 Node tests passed (11 foundation + 12 intake); browser c
 
 ## Task 3: Care documentation, completion and corrections
 
-**Files:** `js/clinic.js`, `js/views/visits.js`, `tests/clinic.test.mjs`.
+**Files:** `js/visits.js`, `js/patient-flows.js`, `js/views/visits.js`, `tests/visits.test.mjs`.
 
-**Interfaces:** `saveVisit(state, input, actor, now)`, `completeVisit(state, input, actor, now)`, and `correctVisit(state, visitId, input, reason, actor, now)`. Completion atomically stores the visit, stock delta and one pending message event before delivery processing.
+**Interfaces:** `saveVisit(state, input, actor, now)`, `completeVisit(state, input, actor, now)`, and `correctVisit(state, visitId, input, reason, actor, now)`. Completion atomically stores the visit and one pending immutable message event before delivery processing. Per the approved scope, supply quantities are recorded now; stock deduction/reconciliation is deferred to Task 6. Inputs include patientId and, for saved work, visitId.
 
-- [ ] Test required-field failures, one active encounter, repeated completion, stale tab writes, storage failure, all four outcomes, and correction audit preservation.
-- [ ] Implement complaint selection/Other, relevant vitals with units, assessment, treatment, supplies, ongoing state and final outcome/notes. Validate finite values and sensible input formats without inventing clinical decision rules.
-- [ ] Separate Save visit, Continue care, Complete visit and correction actions. Show persistent patient identity and pre-completion email explanation. Store revision author/time/reason; never change patient identity to correct a wrongly linked encounter.
-- [ ] Verify saved ongoing work resumes after refresh; invalid/save-failed completion preserves form and produces no email; completed records leave Today but stay in history; later attendance creates a distinct encounter.
+- [x] Test required-field failures, one active encounter, repeated completion, stale tab writes, storage failure, all four outcomes, and correction audit preservation.
+- [x] Implement complaint selection/Other, relevant vitals with units, assessment, treatment, supplies, ongoing state and final outcome/notes. Validate finite values and sensible input formats without inventing clinical decision rules.
+- [x] Separate Save visit, Continue care, Complete visit and correction actions. Show persistent patient identity and pre-completion email explanation. Store revision author/time/reason; never change patient identity to correct a wrongly linked encounter.
+- [x] Verify saved ongoing work resumes after refresh; invalid/save-failed completion preserves form and produces no email; completed records leave Today but stay in history; later attendance creates a distinct encounter.
+
+Task 3 review scope (18 October 2026): BRD v2.2.1; 1440 × 960 desktop only; no Task 2b or backend integration. Pending summary detail is included for the completion link; the full Messages workflow remains Task 4. Corrections compose the existing care form because the screen inventory contains no separate correction frame. Stop after screenshots and test evidence, pending user review.
 
 ## Task 4: Completion summaries and Messages
 
-**Files:** `js/messages.js`, `js/services.js`, `js/views/follow-up.js`, `js/views/visits.js`, `tests/messages.test.mjs`, `demo.html`, `js/demo.js`.
+**Files:** `js/messages.js`, `js/message-flows.js`, `js/services.js`, `js/views/messages.js`, `js/views/visits.js`, `tests/messages.test.mjs`, `demo.html`, `js/demo.js`. Messages has a separate view module so later referral work can use its own views.
 
 **Interfaces:** `buildNurseSummary(state, visit)` creates an immutable subject/body snapshot; `processMessage(eventId)` persists attempt results for the existing event; `retryMessage(eventId)` retries only eligible unresolved events; `recordManualFollowUp(eventId, note, actor, now)` appends history.
 
-- [ ] Test exactly one nurse-summary event for a saved completion, all patient types/outcomes, no events for ordinary saves/scans, failure without visit rollback, retry idempotency, missing recipient, and correction preserving original content.
-- [ ] Implement a designated fictional `example.com` nurse recipient and approved-data demonstration template. Include saved patient/visit/outcome facts only; do not invent missing assessments or vitals.
-- [ ] Implement inbox, status filters, complete email content, visit links, timestamps and attempts. Render Pending/Sent/Failed/Missing recipient from stored mock results, never from the click itself.
-- [ ] Keep pre-existing concerned-party examples separate; do not automatically activate unapproved routing or expose clinical summaries to an adviser. Failed examples permit retry/manual follow-up.
-- [ ] Add separate simulator controls for pending/success/failure/missing address, storage failure, session state, identity updates, and fictional data reset. Normal clinical pages contain no testing controls.
-- [ ] Exercise completion -> View in Messages -> matching nurse email -> completed visit, including refresh, double-click, pending processing and failed retry recovery.
+- [x] Test exactly one nurse-summary event for a saved completion, all patient types/outcomes, no events for ordinary saves/scans, failure without visit rollback, retry idempotency, missing recipient, and correction preserving original content.
+- [x] Implement a designated fictional `example.com` nurse recipient and approved-data demonstration template. Include saved patient/visit/outcome facts only; do not invent missing assessments or vitals.
+- [x] Implement inbox, status filters, complete email content, visit links, timestamps and attempts. Render Pending/Sent/Failed/Missing recipient from stored mock results, never from the click itself.
+- [x] Keep pre-existing concerned-party examples separate; do not automatically activate unapproved routing or expose clinical summaries to an adviser. Failed examples permit retry/manual follow-up.
+- [x] Add separate simulator controls for pending/success/failure/missing address, storage failure, session state, identity updates, and fictional data reset. Normal clinical pages contain no testing controls.
+- [x] Exercise completion -> View in Messages -> matching nurse email -> completed visit, including refresh, double-click, pending processing and failed retry recovery.
+
+Task 4 review scope: user approved Task 3 on 18 October 2026. Frontend only; BRD v2.2.1; desktop 1440 × 960. Local synchronous delivery adapter persists simulated results atomically, without network calls or distributed locking. Pending checks reuse an attempt; retries append only after unresolved failure/missing recipient. No Task 5 work until approval. See `docs/superpowers/qa/2026-10-18-task4-desktop.md`.
 
 ## Task 5: Nurse-managed referral follow-up
 
-**Files:** `js/clinic.js`, `js/views/follow-up.js`, `tests/clinic.test.mjs`.
+**Files:** `js/referrals.js`, `js/referral-flows.js`, `js/views/follow-up.js`, `tests/referrals.test.mjs`, plus saved-visit links and print styling. Separate domain/controller modules keep patient and Messages code focused; the planned interfaces are unchanged.
 
 **Interfaces:** `prepareReferral(state, visitId, input, actor, now)` and `appendReferralActivity(state, referralId, activity, actor, now)` preserve attributable history and validate transitions.
 
-- [ ] Test Prepared does not assert contact, actual contact records Awaiting doctor reply, recorded advice requires source/time, resolution retains history, and late replies never reopen completed visits.
-- [ ] Implement list/status filters, reason/contact, actual Messenger contact, reply/advice, action/resolution forms and printable summary. Keep encounter completion separate from referral resolution.
-- [ ] Verify pending follow-up remains visible after an external-transfer completion. No in-app Messenger inbox, doctor approval, or doctor login.
+- [x] Test Prepared does not assert contact, actual contact records Awaiting doctor reply, recorded advice requires source/time, resolution retains history, and late replies never reopen completed visits.
+- [x] Implement list/status filters, reason/contact, actual Messenger contact, reply/advice, action/resolution forms and printable summary. Keep encounter completion separate from referral resolution.
+- [x] Verify pending follow-up remains visible after an external-transfer completion. No in-app Messenger inbox, doctor approval, or doctor login.
+
+Task 5 checkpoint: frontend only, BRD v2.2.1, desktop 1440 × 960. Actual contact is recorded by the nurse; no Messenger integration. Action/transfer can be recorded without advice, and resolution never changes the encounter. Screenshot/test evidence is in `docs/superpowers/qa/2026-10-19-task5-desktop.md`. Stop for user review before Task 6.
 
 ## Task 6: Inventory, reports and printing
 
-**Files:** `js/clinic.js`, `js/views/operations.js`, `css/app.css`, `tests/clinic.test.mjs`.
+**Files:** `js/inventory.js`, `js/reports.js`, `js/operations-flows.js`, `js/views/operations.js`, visit/app integration, `css/app.css`, `tests/inventory.test.mjs`, `tests/reports.test.mjs`.
 
 **Interfaces:** `adjustStock(state, itemId, delta, reason, actor, now)`, `reconcileVisitSupplies(state, visitId, previous, next, actor, now)`, `reportRows(state, filters)` and print-specific view renderers.
 
-- [ ] Test repeated save does not deduct twice; supply correction applies only the delta; insufficient stock is explained without partial commit; fractional quantities respect each item's unit.
-- [ ] Implement search, stock additions/adjustments with reasons, quantity/unit display and movement history. Avoid hardcoded stock totals detached from visits.
-- [ ] Implement printable daily patient log, monthly totals, complaint/type breakdowns, student grade/section and staff department breakdowns, frequent-patient listing, date/complaint/category filters.
-- [ ] Verify reports derive from saved data, include visitors without school fields, and print without navigation/forms or clipped columns. No reports link to deferred administrative screens.
+- [x] Test repeated save does not deduct twice; supply correction applies only the delta; insufficient stock is explained without partial commit; fractional quantities respect each item's unit.
+- [x] Implement search, stock additions/adjustments with reasons, quantity/unit display and movement history. Avoid hardcoded stock totals detached from visits.
+- [x] Implement printable daily patient log, monthly totals, complaint/type breakdowns, student grade/section and staff department breakdowns, frequent-patient listing, date/complaint/category filters.
+- [x] Verify reports derive from saved data, include visitors without school fields, and print without navigation/forms or clipped columns. No reports link to deferred administrative screens.
+
+Task 6 checkpoint (19 October 2026): approved after meeting Revisions 1–6. Frontend only, desktop 1440 × 960, BRD v2.2.1. Preserve earlier demo encounters by establishing opening stock and usage baselines without retroactive deductions. Saved care reconciles only changed quantities. Reports use Philippine arrival date and current patient grouping. **137/137 Node tests**, **11/11 browser checks**, ten desktop captures, one-page and nine-page A4 PDFs verified. See `docs/superpowers/qa/2026-10-19-task6-desktop.md`. Stop for review; Task 7 is not authorized. Its phone/tablet requirements remain deferred by the current desktop-only scope.
 
 ## Task 7: Responsive and workflow verification
 
@@ -169,4 +179,4 @@ Task 2 verification: 23 Node tests passed (11 foundation + 12 intake); browser c
 - Failure and idempotency checks belong to the domain tasks that own the mutations, not merely UI smoke tests.
 - All modules expose plain data contracts and use a single commit boundary, preventing partial stock/message side effects on a failed visit save.
 - Exact per-screen composition must be inspected from live Figma before its implementation. Existing inspected foundations establish the shared style, not permission to invent remaining layouts.
-- Selected execution: **Native**, as approved by the user, with an explicit review stop after every task. Task 2 is ready for review; wait for go-ahead before Task 3.
+- Selected execution: **Native**, as approved by the user, with an explicit review stop after every task. Tasks 3–6 and meeting Revisions 1–6 have reached their review checkpoints. Task 6 is now ready for review. Wait for go-ahead before further work; responsive implementation remains deferred.

@@ -1,5 +1,5 @@
 export const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-export const icon=name=>`<img class="icon" src="assets/icons/${['today','patients','referrals','inventory','reports','visit','attention','history'].includes(name)?name:'default'}.svg" width="20" height="20" alt="">`;
+export const icon=name=>`<img class="icon" src="assets/icons/${['today','patients','referrals','inventory','reports','visit','attention','history','care'].includes(name)?name:'default'}.svg" width="20" height="20" alt="">`;
 export function button(label,href,{primary=false,disabled=false}={}){
   const style=`button${primary?' button-primary':''}`;
   return disabled?`<button class="${style}" type="button" disabled title="Available in a later preview">${escapeHtml(label)}</button>`:`<a class="${style}" href="${escapeHtml(href)}">${escapeHtml(label)}</a>`;

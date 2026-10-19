@@ -1,5 +1,10 @@
 import {operators} from './data.js';
 
+export function mockEmailResult(mode){
+ const status=['sent','failed','pending'].includes(mode)?mode:'failed';
+ return {status,detail:{sent:'Accepted by the simulated sending service. No real email was delivered.',failed:'The simulated sending service could not accept the message.',pending:'Waiting for the simulated sending service.'}[status]};
+}
+
 export class SessionError extends Error {
   constructor(code,message){super(message);this.name='SessionError';this.code=code;}
 }
@@ -36,10 +41,12 @@ export function createSessionService({storage,now=()=>Date.now(),timeoutMs=15*60
     async changePassword(currentPassword,next,confirmation){
       const operator=requireSession();
       if(await digest(currentPassword)!==await expected(operator.username))throw new SessionError('CURRENT_PASSWORD','Your current password is incorrect.');
-      if(next.length<8)throw new SessionError('PASSWORD_LENGTH','Use at least 8 characters for your new password.');
+      if(typeof next!=='string'||!next.trim()||next.length<8)throw new SessionError('PASSWORD_LENGTH','Use at least 8 characters for your new password; it cannot be only spaces.');
       if(next!==confirmation)throw new SessionError('PASSWORD_CONFIRMATION','The new passwords do not match.');
       if(next===currentPassword)throw new SessionError('PASSWORD_UNCHANGED','Choose a different new password.');
-      verifiers.set(operator.username,await digest(next));return true;
+      const verifier=await digest(next),active=requireSession();
+      if(active.id!==operator.id)throw new SessionError('AUTH_REQUIRED','Your signed-in account changed. Please sign in again.');
+      verifiers.set(operator.username,verifier);return true;
     }
   };
 }

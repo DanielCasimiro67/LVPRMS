@@ -358,3 +358,31 @@ The same route reflows across sizes. State is determined by records and user act
 | [226:14565](https://www.figma.com/design/j9OCbJk4L7CjZxtqbHbRAq/LVCC-Clinic-System?node-id=226-14565) | Messages · Ana Reyes · Left clinic after treatment · 1024 | 1024 × 960 | nurseSummary | `#/messages/:messageId` |
 | [226:14660](https://www.figma.com/design/j9OCbJk4L7CjZxtqbHbRAq/LVCC-Clinic-System?node-id=226-14660) | Messages · Leo Cruz · Left clinic after treatment · 390 | 390 × 844 | nurseSummary | `#/messages/:messageId` |
 | [226:14717](https://www.figma.com/design/j9OCbJk4L7CjZxtqbHbRAq/LVCC-Clinic-System?node-id=226-14717) | Messages · Ana Reyes · Left clinic after treatment · 390 | 390 × 844 | nurseSummary | `#/messages/:messageId` |
+
+## Task 5 implementation route additions (19 October 2026)
+
+The original frame inventory above is unchanged. These BRD-required desktop forms compose the inspected referral details/contact/resolution components; no separate Figma frame is claimed:
+
+- `#/referrals/new?visit=:visitId` — prepare a referral against a saved visit.
+- `#/referrals/:referralId/actions` — record an action or external transfer while follow-up continues.
+
+Existing contact, reply, resolve and print routes follow their mapped desktop frames.
+
+## Task 6 desktop implementation routes (19 October 2026)
+
+The original frame inventory is unchanged. These desktop nodes were inspected with high-fidelity design context before implementation. Shared list/history/forms serve record-driven examples; no phone/tablet frame was compared in this task.
+
+| Desktop Figma node | Runtime route |
+| --- | --- |
+| Inventory `177:12543` | `#/inventory` |
+| Low stock `179:10488` | `#/inventory?stock=low` |
+| Add stock `178:5354` | `#/inventory/add` and `#/inventory/:itemId/add` |
+| Adjust stock `179:10607` | `#/inventory/:itemId/adjust` |
+| Stock history `179:10890` | `#/inventory/:itemId/history` (`#/inventory/:itemId` also opens history) |
+| Reports `178:5697` | `#/reports` |
+| Daily print `178:9797` | `#/reports/daily/print` |
+| Monthly summary `179:6159` | `#/reports/monthly` |
+| Complaints `179:10154` | `#/reports/complaints` |
+| Frequent patients `179:10315` | `#/reports/frequent` |
+
+Reports retain query filters `from`, `to`, `type`, `complaint`. Each aggregate route supports `/print` using the same content and print styles. The date-range example becomes native From/To fields, and all counts come from saved records. Additional seeded supplies retain earlier visit-selector choices. No administration routes or catalog management were added. Existing fonts/icons are reused; no new remote asset is required.
