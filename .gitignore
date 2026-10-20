@@ -20,3 +20,7 @@ node_modules/
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# React production output
+/dist/
+/dist-react/
