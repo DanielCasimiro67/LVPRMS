@@ -94,11 +94,11 @@ Preserve the completion-email explanation, then show the actual server status an
 2. Freeze a current controller/request/response field matrix before API writes. Keep UI routes distinct from HTTP endpoints. Confirm the base URL, version prefix, authentication, CORS and test account setup without storing credentials in Git.
 3. Integrate auth, patient identification/records, visits/completion, supplies/inventory, referrals/Messages, then reports. Use mock contract tests for adapters; verify actual service behavior separately with a disposable non-production database and approved test records.
 4. Run Node domain/contract tests, React component/interaction tests as needed, production build and desktop browser checks. A mocked response is not proof of live backend operation. Label each workflow connected, read-only, unavailable or demo-only.
-5. Update launch/configuration instructions (`npm install`, `npm run dev`, `npm run build`, environment examples), route map, test evidence and backend-fix list. Stop at agreed review checkpoints; no deployment or push is implied.
+5. Update launch/configuration instructions (`npm install`, `npm run dev`, `npm run build`, environment examples), route map, test evidence and backend-fix list. No deployment is included. The user explicitly authorized pushing the tested React frontend to LVPRMS.
 
 ## Review inputs still needed
 
-Repository and current integration-status source are now identified and inspected; no further source-location question is needed. A running API URL is not required for the React-first checkpoint: keep it configurable and test contracts with fixtures. The backend must later resolve the compatibility gaps before the corresponding live writes can be enabled. Preserve all current workflows in explicit demo mode in the meantime. Package setup and product-code migration wait for design approval and the implementation-plan review required by the project workflow.
+Repository and current integration-status source are now identified and inspected; no further source-location question is needed. A running API URL is not required for the React-first checkpoint: keep it configurable and test contracts with fixtures. The backend must later resolve the compatibility gaps before the corresponding live writes can be enabled. Preserve all current workflows in explicit demo mode in the meantime. The user subsequently approved the design/plan, Native execution, tests and push to LVPRMS. Implementation proceeded in the existing workspace.
 
 ## Scope clarification from repository review
 

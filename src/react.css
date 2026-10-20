@@ -1,0 +1,31 @@
+.route-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+}
+.route-content > * {
+  flex-shrink: 0;
+}
+.borderless {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.message-body {
+  white-space: pre-wrap;
+}
+.report-print > *,
+.referral-print > * {
+  flex-shrink: 0;
+}
+@media print {
+  .route-content {
+    display: contents;
+  }
+}
+
+.route-content > .visit-identity {
+  margin: -32px -32px 8px;
+}

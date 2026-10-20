@@ -8,7 +8,7 @@ This is the root instruction file for the La Verdad Patient Record Management Sy
 
 Design a usable school-clinic system for La Verdad Christian College – Apalit. Prioritize accurate patient identification, fast visit recording, continuity of care, and clear operational feedback for clinic staff.
 
-The current deliverable is an interactive Figma UI/UX prototype grounded in the BRD and the system-flow specification. Application code, production integrations, and deployment require a separate implementation request.
+The current deliverable is the approved React nurse frontend in this repository, grounded in BRD v2.2.1 and later meeting decisions. Desktop 1440×960 only; phone/tablet remain deferred. The user authorized React migration, verification and pushing to LVPRMS. See README and docs/FRONTEND_BACKEND_HANDOFF.md before integration work. No deployment or backend changes are included.
 
 ## Project structure and sources
 
@@ -88,7 +88,7 @@ Use fictional sample data. Simulate RFID, MIS, SMS/email, and Messenger-related 
 - Provide understandable empty states, no-results states, permission-denied states, failures, confirmations, and session-expiry behavior.
 - Preserve entered information on validation/save failure. Never promise recovery of unsaved data without specifying a persistence mechanism.
 - Target WCAG 2.2 AA in the final implementation. Verify applicable contrast, keyboard/focus, target-size, labeling, and reflow guidance against authoritative W3C sources. A visual prototype alone cannot establish conformance.
-- Use 1440 px as an initial desktop reference and validate the 1024 px layout; confirm actual clinic devices before finalizing responsive requirements.
+- Verify only desktop 1440×960 under the current scope. Keep CSS flexible; phone/tablet layouts and verification are deferred.
 - Keep technical release notes and integration assumptions in design annotations, not in the clinic user's ordinary interface.
 
 ## Verification and handoff

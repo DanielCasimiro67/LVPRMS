@@ -1,26 +1,40 @@
 # La Verdad Clinic
 
-An incremental frontend prototype of **Clinic app · Responsive**, using plain HTML, CSS and native JavaScript modules. No framework, dependencies, install command or build step.
+A React frontend for the LVCC nurse workspace, preserving the approved clinic UI and workflows. React Router handles navigation; Vite provides development and production builds. Default mode is a fully interactive fictional-data demo. See the [backend handoff](docs/FRONTEND_BACKEND_HANDOFF.md) for the separate API preview and its limits.
 
 ## Run
 
 Open this folder in VS Code and run in its terminal:
 
 ```powershell
+npm install
 npm run dev
 ```
 
-Ctrl+click the **Local** link printed in the terminal. The server starts at port 4174 and tries the next port automatically if it is busy. Press Ctrl+C to stop. No `npm install` is needed; Node.js and npm are the only prerequisites. `npm start` runs the same server. Choose a starting port with `npm run dev -- 4300` if needed.
+Ctrl+click the **Local** link printed in the terminal. The server starts at port 4174 and tries the next port automatically if it is busy. Press Ctrl+C to stop. Install dependencies first; use Node.js 24 or a compatible current LTS release. `npm start` runs the same server. Choose a starting port with `npm run dev -- --port 4300` if needed.
 
-The small Node server serves only public application files on loopback. Use HTTP rather than opening `index.html` directly, because browser modules require an HTTP origin. Refresh the browser after editing files. Browser data is specific to each port, so a different port starts with its own fictional records and session.
+Vite serves the app on loopback with hot reload. Use HTTP rather than opening `index.html` directly. Browser data is specific to each port, so a different port starts with its own fictional records and session.
 
 ## Sharing with teammates
 
-Commit the application (`index.html`, `css/`, `js/`, `assets/`), `scripts/`, `package.json`, `tests/`, `.gitignore`, this README and the project documentation. Keep the font license in `assets/fonts/OFL.txt`. Tests and documentation do not run with the app, but help teammates verify changes and follow the requirements. The current readable BRD is [docs/LVPRMS_BRD.pdf](docs/LVPRMS_BRD.pdf); its editable source is [docs/BRD.md](docs/BRD.md).
+Commit the application (`index.html`, `src/`, `css/`, `js/`, `assets/`, `demo.html`), `vite.config.js`, `package.json`, `package-lock.json`, `.env.example`, `scripts/`, `tests/`, `.gitignore`, this README and the project documentation. Keep the font license in `assets/fonts/OFL.txt`. Tests and documentation do not run with the app, but help teammates verify changes and follow the requirements. The current readable BRD is [docs/LVPRMS_BRD.pdf](docs/LVPRMS_BRD.pdf); its editable source is [docs/BRD.md](docs/BRD.md).
 
 `.gitignore` excludes local agent progress, `tmp/`, generated `output/` exports, historical Figma helper scripts/inspection data, dependencies, logs and `.env` secrets. These files remain on your computer. The Figma screen inventory and route map stay in Git because the tests and implementation reference them.
 
-After cloning or downloading the repository, teammates open the project folder in VS Code and run `npm run dev`. They can run `npm test` for the automated checks. No dependency installation is needed. Each browser starts with fictional sample records; your browser's saved records and session are not included in Git.
+After cloning or downloading the repository, teammates open the project folder in VS Code and run `npm install`, then `npm run dev`. They can run `npm test` for the automated checks. Each browser starts with fictional sample records; your browser's saved records and session are not included in Git.
+
+## React migration — 20 October 2026
+
+The clinical screens now render through React components in `src/features/`, with shared controls in `src/components/` and routing/session state in `src/app/`. `css/tokens.css` and `css/app.css` retain the existing design; `src/react.css` adapts the React wrappers. Pure workflow/storage modules in `js/` remain shared and tested. The old `js/app.js` and DOM views are historical source, not the runtime entry.
+
+- `npm test`: 148 Node/domain/transport/component tests passed.
+- `npm run build`: creates `dist/`, including both standalone simulators.
+- `npm run preview`: serves the build for local review; this does not start Laravel.
+- Desktop only: 1440×960. Responsive layouts (BRD NFR1/AC20) are deferred and not yet implemented; phone/tablet verification is excluded.
+- Default demo credentials: `elena.lim` / `clinic-demo`. Existing same-origin `lvcc.clinic.v1` data is retained. A different hostname/port has separate browser data.
+- API mode is explicit, never a fallback: copy `.env.example` to `.env`, set `VITE_DATA_MODE=api`, configure the base/proxy and restart Vite. Only verified reads, authentication and password changes are connected. Clinical writes remain unavailable pending backend changes. No live backend or real delivery was verified.
+
+The reference backend repository was read only. It was not copied into LVPRMS or modified. [API compatibility and route handoff](docs/FRONTEND_BACKEND_HANDOFF.md) lists all route declarations and remaining backend work. [React QA checkpoint](docs/superpowers/qa/2026-10-20-react-desktop.md) records evidence and limitations.
 
 ## Current preview: Tasks 1–7 and meeting revisions 1–6 (desktop)
 
@@ -48,7 +62,7 @@ A successful completion stores exactly one pending nurse-summary snapshot. Messa
 
 Open `/demo.html` on the same local server for the separate [demo simulator](demo.html). Choose accepted, failed or pending email results, or clear the fictional nurse address to exercise Missing recipient. Settings affect subsequent processing; refresh an existing message and use Check status or Retry message. Only `example.com` recipients are accepted by the simulation. The original minimal adviser example remains separate from clinical nurse summaries and is never sent automatically.
 
-The simulator also offers storage-save failure/recovery, current-tab session expiry, a fictional section update and confirmed fictional-data reset. These controls do not appear in clinical screens. For the existing school-import/card-conflict simulator, use the intake simulator below. Demo data and settings belong to the browser origin: use the same hostname and port for the clinic and simulator. Restart `npm run dev` after a server-script update so `/demo.html` is served.
+The simulator also offers storage-save failure/recovery, current-tab session expiry, a fictional section update and confirmed fictional-data reset. These controls do not appear in clinical screens. For the existing school-import/card-conflict simulator, use the intake simulator below. Demo data and settings belong to the browser origin: use the same hostname and port for the clinic and simulator. Both simulators are retained in development and production builds.
 
 Correct visit requires a reason, retains earlier clinical versions and their authors/timestamps, keeps patient identity fixed, and preserves the original email snapshot. Failed or stale saves keep form entries and do not partially save records or create email events. Separate per-patient drafts support Save and switch, Keep editing, and Discard and switch.
 
@@ -103,7 +117,7 @@ Print daily log/Print report uses the currently entered filters. The standalone 
 
 ## Final desktop checkpoint — 20 October 2026
 
-Task 7 is complete within the approved **frontend-only, 1440×960** scope. `npm test`: **139 passed, 0 failed**. Final native Playwright/Edge checks: **86 passed across nine suites**, including a sweep of 12 nurse routes; zero recorded page/console errors. Browser plugin was unavailable. Static verification checked 37 JavaScript/server modules and 17 nonempty local asset files, with no temporary Figma or remote asset references in shipped code. Print checks retained a three-row A4 log on one page and a 63-row stress log on nine pages with repeated headers and the final record present. No backend, phone/tablet or production acceptance claim is made.
+Historical pre-React checkpoint: Task 7 was complete within the approved **frontend-only, 1440×960** scope. `npm test`: **139 passed, 0 failed**. Final native Playwright/Edge checks: **86 passed across nine suites**, including a sweep of 12 nurse routes; zero recorded page/console errors. Browser plugin was unavailable. Static verification checked 37 JavaScript/server modules and 17 nonempty local asset files, with no temporary Figma or remote asset references in shipped code. Print checks retained a three-row A4 log on one page and a 63-row stress log on nine pages with repeated headers and the final record present. That checkpoint did not verify backend, phone/tablet or production acceptance.
 
 Final fixes: simulated school updates now replace obsolete department/education fields, so a later contact-only edit cannot restore the prior category. Messages manual follow-up warns before navigation/browser exit; status retry/check cannot clear entered text. Save retains the authored note; Cancel/Discard explicitly drops the draft, which is not persisted across reload. Password eye controls use the shared 44px target. All fixes were reproduced before being changed; the school-data regressions are retained in `tests/final-workflow.test.mjs`.
 
@@ -119,7 +133,7 @@ Final fixes: simulated school updates now replace obsolete department/education 
 | AC20 | Desktop styling, labels, keyboard/focus, visible assets and navigation checked against representative desktop Figma frames. Phone/tablet (NFR1/AC20) remain deferred and not yet implemented; this is not full WCAG certification. |
 | AC23–AC24 | Distinct complaint/date filters, note edit/cancel, blank/limit/stale/failed-save protection, original attribution and edit history tested. |
 
-Evidence is local and not required to run the app: `C:/Users/daniel/.codex/visualizations/2026/10/14/01a13b68-dfae-75e1-829c-f8f6a7841f08/clinic-task7/verification-summary.json`. That folder contains browser runners/results and desktop screenshots; they are deliberately outside committed application source. Tests used isolated browser contexts on port 4316, not the usual port 4174 records. Launch, demo accounts, storage recovery and simulation limits are documented above. No dependencies were added, and no commit or push was made. Stopped after Task 7 for review.
+Evidence is local and not required to run the app: `C:/Users/daniel/.codex/visualizations/2026/10/14/01a13b68-dfae-75e1-829c-f8f6a7841f08/clinic-task7/verification-summary.json`. That folder contains browser runners/results and desktop screenshots; they are deliberately outside committed application source. Tests used isolated browser contexts on port 4316, not the usual port 4174 records. Launch, demo accounts, storage recovery and simulation limits are documented above. At that historical checkpoint no dependencies were added and no commit or push was made. The React checkpoint above supersedes those setup details.
 
 ## Storage and concurrency
 

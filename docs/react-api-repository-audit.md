@@ -50,4 +50,4 @@ The client also retains methods for absent endpoints, including inventory writes
 3. Prepare adapters and mock contract tests for verified endpoints. Connect live operations only when supported and a test backend is available. Unsupported actions explain availability; failed API calls never fall back to fake success.
 4. Give the backend teammate this compatibility table. Backend work is a separate task; do not change their schema or business rules as a side effect of the React migration.
 
-Written review draft: `docs/superpowers/specs/2026-10-20-react-api-migration-design.md`. No product-code conversion or dependency changes have started.
+Implementation update: Native execution was approved and the React migration is complete. See `FRONTEND_BACKEND_HANDOFF.md` for current support and the React QA checkpoint for validation. The findings above describe the unchanged reference backend.

@@ -2,7 +2,7 @@
 
 Page: **Clinic app · Responsive** (`174:4208`). Live inventory: **348 screens/states**, **4 guide frames**. All top-level frames were inspected via node metadata and text content on October 15, 2026. Component definitions are shared UI primitives, not routes. Nested Application/content wrappers are not separate screens.
 
-The same route reflows across sizes. State is determined by records and user actions; a mapped example state is not evidence that its functionality is implemented. Parameter names stand for real record IDs. All routes beyond login, session-ended, menu, account, and Today foundation are reserved for later tasks. The JSON companion retains inspection evidence for every frame. Additional high-fidelity context is mandatory before implementing each screen.
+React implementation update (20 October 2026): the current runtime route registry is `src/app/router.jsx`; the Figma map below remains the historical design inventory. Nurse workflows are implemented in demo mode. Only desktop 1440×960 is implemented and verified; tablet/phone frames are deferred. Meeting decisions and BRD v2.2.1 supersede older frame content. API capability differs from route availability; see `FRONTEND_BACKEND_HANDOFF.md`.
 
 | Figma node | Frame | Dimensions | State | Route / guide destination |
 |---|---|---|---|---|
