@@ -357,3 +357,9 @@ Inventory → search/all/low stock → Open stock history → Add stock or Adjus
 Reports → date range, patient type and complaint → Apply filters or Print daily log. Monthly, complaint and frequent-patient reports provide the same filters and standalone printing. Counts come from saved ongoing/completed encounters, never drafts; inclusive dates use Philippine arrival date. Patient groups use current patient records; visitor rows have no school fields. Frequent patients ranks all matching patients by visit count. Print / Save PDF uses the browser and hides controls/navigation; multipage tables repeat their headers. Initial daily range is today; other reports start at the current month.
 
 Task6 supersedes earlier deferred Inventory/Reports pages. Frontend only, desktop1440x960. See superpowers/qa/2026-10-19-task6-desktop.md. No backend or phone/tablet work; stop after this checkpoint.
+
+### Task 7 final desktop checkpoint —20 October2026
+
+Messages manual follow-up: entered text triggers Keep editing/Discard changes before route changes and a browser-exit warning. Retry/Check status asks the operator to save or cancel first and cannot clear the entered note. Save retains the authored entry; Cancel/Discard clears only the draft. Drafts remain local to the open page, with no reload recovery claim. Simulated school updates replace obsolete department/education fields, preserving the authoritative category across later contact-only edits and retaining clinical data. Password eye controls share the44px target size.
+
+Final frontend-only1440x960 verification:139 Node tests,86 browser checks across nine suites,12 nurse routes; zero recorded browser errors. README records detailed acceptance boundaries and evidence. No backend or phone/tablet implementation/acceptance is included. Stop for review.

@@ -1,6 +1,6 @@
 # LVCC Clinic Frontend Implementation Plan
 
-Active work after Task 5: the [October 19 meeting-revision sequence](2026-10-19-frontend-meeting-revisions.md). Original Task 6 waits behind those revisions. Historical task results below are retained.
+Current checkpoint: Tasks 1–7 and meeting Revisions 1–6 are implemented/verified for desktop review. The user explicitly deferred phone/tablet and backend work. Historical task results below are retained.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans for native execution after the user reviews this plan and selects execution. Do not delegate without user authorization. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -159,19 +159,23 @@ Task 5 checkpoint: frontend only, BRD v2.2.1, desktop 1440 × 960. Actual contac
 
 Task 6 checkpoint (19 October 2026): approved after meeting Revisions 1–6. Frontend only, desktop 1440 × 960, BRD v2.2.1. Preserve earlier demo encounters by establishing opening stock and usage baselines without retroactive deductions. Saved care reconciles only changed quantities. Reports use Philippine arrival date and current patient grouping. **137/137 Node tests**, **11/11 browser checks**, ten desktop captures, one-page and nine-page A4 PDFs verified. See `docs/superpowers/qa/2026-10-19-task6-desktop.md`. Stop for review; Task 7 is not authorized. Its phone/tablet requirements remain deferred by the current desktop-only scope.
 
-## Task 7: Responsive and workflow verification
+## Task 7: Final desktop workflow verification and polish
 
 **Files:** Appropriate implementation files and `README.md`; keep temporary browser scripts/screenshots outside committed source.
 
 **Interfaces:** Exercise the complete static app over HTTP, using the same routes and domain functions delivered above.
 
-- [ ] Run `node --test tests/clinic.test.mjs tests/messages.test.mjs`; all domain assertions must pass. Confirm no syntax errors or remote temporary Figma URLs in shipped assets/code.
-- [ ] Use the in-app browser for rendered checks where available. If unavailable, use bundled Playwright and record the fallback reason; avoid new browser dependencies unless required.
-- [ ] Verify app URL/title, meaningful first render, console health, working primary controls, refresh/back navigation, validation recovery, and no forbidden scope/codes in normal screens.
-- [ ] Compare Figma and rendered screenshots at 1440x960, 1024x960 and 390x844; additionally check 320px reflow and keyboard focus. Verify labels, dialogs, contrast, 44px target height, visible focus and readable statuses; do not claim full WCAG conformance from these checks alone.
-- [ ] Execute BRD scenarios AC1-AC10 and AC12-AC22 as applicable to the local mock prototype; AC11 is deferred. Record simulation boundaries for authentication, multi-device concurrency, real equipment, school data and delivery providers.
-- [ ] Verify every visible asset is a nonempty local file rendered in the intended slot with correct proportions. Compare supplied login image and current reference against the browser screenshot with `view_image`.
-- [ ] Document launch command, fictional account examples, simulator route, storage reset/recovery, implementation limitations and unverified integrations. Open the running app for the user.
+- [x] Run `node --test tests/clinic.test.mjs tests/messages.test.mjs`; all domain assertions must pass. Confirm no syntax errors or remote temporary Figma URLs in shipped assets/code.
+- [x] Use the in-app browser for rendered checks where available. If unavailable, use bundled Playwright and record the fallback reason; avoid new browser dependencies unless required.
+- [x] Verify app URL/title, meaningful first render, console health, working primary controls, refresh/back navigation, validation recovery, and no forbidden scope/codes in normal screens.
+- [x] Compare representative Figma and rendered desktop screenshots at 1440x960 only. Verify labels, dialogs, shared target sizing, visible focus and readable statuses. Phone/tablet/320px checks are explicitly deferred by the user; do not claim full WCAG conformance from these checks alone.
+- [x] Execute BRD scenarios AC1-AC10 and AC12-AC22 as applicable to the local mock prototype; AC11 is deferred. Record simulation boundaries for authentication, multi-device concurrency, real equipment, school data and delivery providers.
+- [x] Verify every visible asset is a nonempty local file rendered in the intended slot with correct proportions. Compare supplied login image and current reference against the browser screenshot with `view_image`.
+- [x] Document launch command, fictional account examples, simulator route, storage reset/recovery, implementation limitations and unverified integrations. Open the running app for the user.
+
+Task 7 checkpoint (20 October 2026): **139/139 Node tests**, **86/86 browser checks across nine suites**, 12 nurse routes, zero recorded browser errors. 37 modules passed syntax checks; 17 local asset files are nonempty, with no temporary/remote runtime asset URLs. Daily and stress A4 print checks pass. Fresh-context final review found two Important issues: stale school classification surviving an import, and unguarded Messages follow-up loss. Both were reproduced and fixed; password eye targets also use the shared44px size. Native browser scripts were adapted for current automatic scanning, patient-identity confirmation, stock deduction and note validation rather than reverting those approved behaviors. README records acceptance/simulation boundaries. All Task7 changes remain uncommitted; stop for user review.
+
+- [ ] Deferred, outside this approved Task7: phone/tablet layouts and verification under BRD NFR1/AC20. No backend, deployment or production acceptance work.
 
 ## Plan self-review
 
@@ -179,4 +183,4 @@ Task 6 checkpoint (19 October 2026): approved after meeting Revisions 1–6. Fro
 - Failure and idempotency checks belong to the domain tasks that own the mutations, not merely UI smoke tests.
 - All modules expose plain data contracts and use a single commit boundary, preventing partial stock/message side effects on a failed visit save.
 - Exact per-screen composition must be inspected from live Figma before its implementation. Existing inspected foundations establish the shared style, not permission to invent remaining layouts.
-- Selected execution: **Native**, as approved by the user, with an explicit review stop after every task. Tasks 3–6 and meeting Revisions 1–6 have reached their review checkpoints. Task 6 is now ready for review. Wait for go-ahead before further work; responsive implementation remains deferred.
+- Selected execution: **Native**, as approved by the user, with an explicit review stop after every task. Tasks 3–6 and meeting Revisions 1–6 have reached their review checkpoints. Task 7 is now ready for review. Wait for go-ahead before further work; responsive implementation remains deferred.

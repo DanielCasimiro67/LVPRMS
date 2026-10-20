@@ -113,7 +113,7 @@ try{
       const path=parseRoute(target).path;
       if(activeHash&&target!==activeHash&&!['/login','/logout','/session-ended'].includes(path)&&session.current()){
         history.replaceState(null,'',activeHash);
-        if(!await operationsFlows.beforeLeave()||!await referralFlows.beforeLeave()||!await patientFlows.beforeLeave())return;
+        if(!await messageFlows.beforeLeave()||!await operationsFlows.beforeLeave()||!await referralFlows.beforeLeave()||!await patientFlows.beforeLeave())return;
         history.replaceState(null,'',target);
       }
       if(path!=='/account')passwordChanged=false;render();

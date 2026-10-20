@@ -22,7 +22,7 @@ Commit the application (`index.html`, `css/`, `js/`, `assets/`), `scripts/`, `pa
 
 After cloning or downloading the repository, teammates open the project folder in VS Code and run `npm run dev`. They can run `npm test` for the automated checks. No dependency installation is needed. Each browser starts with fictional sample records; your browser's saved records and session are not included in Git.
 
-## Current preview: Tasks 1–6 and meeting revisions 1–6
+## Current preview: Tasks 1–7 and meeting revisions 1–6 (desktop)
 
 Implemented: sign-in, session guard, sign-out, 15-minute inactivity expiry, My account/password-change simulation, desktop navigation, Today overview, versioned fictional-data storage and recovery feedback. Phone/tablet layouts remain deferred and unverified.
 
@@ -66,9 +66,9 @@ The consistency pass uses shared patient descriptions on Today, so higher-ed stu
 
 Fresh fictional data includes the Figma student/staff referral examples. Existing browser data is kept. An older unlinked referral shows recovery guidance; it is never silently linked to a later encounter or given invented clinical history. New referral drafts remain unsaved in the open form; leaving asks whether to keep editing or discard. Stale or failed saves preserve entries. A full refresh does not restore an unsaved referral form.
 
-**Current layout scope: desktop only, verified at 1440 × 960.** Full responsive layouts under **BRD NFR1/AC20 are deferred and not yet implemented for the new visit, Messages and referral workflows**. Earlier prototype breakpoint CSS remains, but phone/tablet layouts were not built or verified for Tasks 3–5. New form groups use flexible grid/flex sizing so responsive work can follow.
+**Current layout scope: desktop only, verified at 1440 × 960.** Full responsive layouts under **BRD NFR1/AC20 are deferred and not yet implemented for the new visit, Messages and referral workflows**. Earlier prototype breakpoint CSS remains, but phone/tablet layouts were not built or verified for Tasks 3–7. New form groups use flexible grid/flex sizing so responsive work can follow.
 
-Card examples: `RFID-1001` / school ID `2026-001` for Mara; `RFID-1002` / `2026-102` for Leo. Repeated identification offers to resume the same active visit or existing draft. Name-search results always require explicit selection.
+Card examples: `RFID-1001` / school ID `2026-001` for Mara; `RFID-1002` / `2026-102` for Leo. Identification resumes an unsaved draft; a saved active visit opens the quick discharge confirmation. It never discharges automatically. Name-search results always require explicit selection.
 
 The separate [intake simulator](assets/intake-simulator.html) exercises one-way school identity updates and ambiguous cards. Open it in the same signed-in tab. Its default update rotates Mara’s card to `RFID-NEW`; its ambiguous example uses `RFID-SHARED`. It updates identity fields only and reports conflicts; it sends no clinical data and creates no operator accounts. Simulation controls never appear in ordinary clinic screens.
 
@@ -99,7 +99,27 @@ On the first authenticated opening after this update, existing visits and suppli
 
 Reports provide date-range, patient-category and complaint filters; the daily patient log; monthly/type totals; student grade/section or program/year and staff-department breakdowns; complaint counts; and patients ranked by visit count. Saved ongoing and completed encounters count once each; drafts do not count. Inclusive date filters use arrival date in Philippine time. Categories and education/department groups use the current patient record. Visitors do not acquire school fields. Frequent patients lists all matching patients, including one-visit patients, ordered by count. Daily reports initially show today; other reports initially show the current month. Set a range to review older sample visits.
 
-Print daily log/Print report uses the currently entered filters. The standalone preview offers Print / Save PDF through the browser, removing navigation, forms and record-opening controls in print. No PDF service, database or backend was added. See the [Task 6 desktop QA checkpoint](docs/superpowers/qa/2026-10-19-task6-desktop.md): 137 Node tests, 11 browser checks at 1440×960 and single/multiple-page A4 print verification. Responsive layouts (BRD NFR1/AC20) remain deferred and not yet implemented; no phone/tablet verification was performed. Stop after this task for review.
+Print daily log/Print report uses the currently entered filters. The standalone preview offers Print / Save PDF through the browser, removing navigation, forms and record-opening controls in print. No PDF service, database or backend was added. See the [Task 6 desktop QA checkpoint](docs/superpowers/qa/2026-10-19-task6-desktop.md): 137 Node tests, 11 browser checks at 1440×960 and single/multiple-page A4 print verification. Responsive layouts (BRD NFR1/AC20) remain deferred and not yet implemented; no phone/tablet verification was performed. Task 7 verification follows below; backend and responsive work still require separate approval.
+
+## Final desktop checkpoint — 20 October 2026
+
+Task 7 is complete within the approved **frontend-only, 1440×960** scope. `npm test`: **139 passed, 0 failed**. Final native Playwright/Edge checks: **86 passed across nine suites**, including a sweep of 12 nurse routes; zero recorded page/console errors. Browser plugin was unavailable. Static verification checked 37 JavaScript/server modules and 17 nonempty local asset files, with no temporary Figma or remote asset references in shipped code. Print checks retained a three-row A4 log on one page and a 63-row stress log on nine pages with repeated headers and the final record present. No backend, phone/tablet or production acceptance claim is made.
+
+Final fixes: simulated school updates now replace obsolete department/education fields, so a later contact-only edit cannot restore the prior category. Messages manual follow-up warns before navigation/browser exit; status retry/check cannot clear entered text. Save retains the authored note; Cancel/Discard explicitly drops the draft, which is not persisted across reload. Password eye controls use the shared 44px target. All fixes were reproduced before being changed; the school-data regressions are retained in `tests/final-workflow.test.mjs`.
+
+| BRD checks | Frontend verification and remaining boundary |
+| --- | --- |
+| AC1–AC6, AC15 | Automatic known/unknown scan, category filters, registration, visitors and separate patient drafts tested. Meeting changes supersede manual Today ID fields and require confirmation for second-tap checkout. Actual hardware is unverified. |
+| AC7 | Local school-update simulation, identity conflicts and clinical-data preservation tested; no MIS connection. |
+| AC8, AC13 | Nurse referral contact/reply/actions/resolution, actual-transfer checkout and excluded role/module menus checked. No Messenger integration. |
+| AC9–AC10, AC16–AC19, AC22 | Completion snapshots, duplicate prevention, pending/failed/missing recipient, retry and manual follow-up tested using the local simulator. Other-recipient notification policy and real delivery remain unverified. |
+| AC11 | Administration remains deferred. |
+| AC12, AC21 | Sign-out, session expiry and password-only account controls tested. This does not establish secure authentication, account deactivation or production RBAC. |
+| AC14 | Saved supply deduction/correction, insufficient-stock rejection and filtered/printed reports tested. Opening quantities remain fictional demo counts. |
+| AC20 | Desktop styling, labels, keyboard/focus, visible assets and navigation checked against representative desktop Figma frames. Phone/tablet (NFR1/AC20) remain deferred and not yet implemented; this is not full WCAG certification. |
+| AC23–AC24 | Distinct complaint/date filters, note edit/cancel, blank/limit/stale/failed-save protection, original attribution and edit history tested. |
+
+Evidence is local and not required to run the app: `C:/Users/daniel/.codex/visualizations/2026/10/14/01a13b68-dfae-75e1-829c-f8f6a7841f08/clinic-task7/verification-summary.json`. That folder contains browser runners/results and desktop screenshots; they are deliberately outside committed application source. Tests used isolated browser contexts on port 4316, not the usual port 4174 records. Launch, demo accounts, storage recovery and simulation limits are documented above. No dependencies were added, and no commit or push was made. Stopped after Task 7 for review.
 
 ## Storage and concurrency
 

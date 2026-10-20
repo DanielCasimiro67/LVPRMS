@@ -91,3 +91,5 @@ Revision6 checkpoint: **123 Node tests**, **10 desktop checks**, five screenshot
 Inventory stock reconciliation and reports, as a separate approved task after these revisions. Phone/tablet layouts remain deferred; no backend or admin workspace introduced.
 
 Task 6 was separately authorized after approval of Revision 6 and is now implemented for review. Inventory additions/count adjustments/history, saved-visit stock reconciliation and filtered/printable reports follow the original plan. Verification: 137 Node tests, 11 desktop checks, ten captures and two A4 PDF checks. See `../qa/2026-10-19-task6-desktop.md`. Stop here; backend and phone/tablet remain deferred.
+
+Task 7 was separately approved and completed on20 October2026: frontend only, desktop1440×960. Final verification139 Node tests and86 browser checks across nine suites. Two final-review data/draft issues were fixed and password-eye targets polished; see README Final desktop checkpoint. Phone/tablet and backend remain deferred. Stop after this checkpoint.

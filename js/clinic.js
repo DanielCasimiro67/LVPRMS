@@ -90,8 +90,11 @@ export function mergeSchoolIdentities(s,records,actor,now){
     if(!p){p={id:id(),type:r.type,notes:[]};s.patients.push(p);}
     if(p.type==='visitor'){conflicts.push({sourceId:r.sourceId,reason:'Visitor records cannot be linked automatically.'});continue;}
     Object.assign(p,{name:clean(r.name),type:r.type,schoolId:clean(r.schoolId),provisional:false});
-    delete p.grade;delete p.section;delete p.department;
-    if(r.type==='student')Object.assign(p,{grade:clean(r.grade),section:clean(r.section)});else p.department=clean(r.department);
+    for(const field of ['grade','section','program','year','department','departmentGroup'])delete p[field];
+    if(r.type==='student'){
+      const higher=r.departmentGroup==='higher-ed'||Boolean(clean(r.program));
+      Object.assign(p,higher?{departmentGroup:'higher-ed',department:'Higher ed',program:clean(r.program),year:clean(r.year)}:{departmentGroup:'basic-ed',department:'Basic ed',grade:clean(r.grade),section:clean(r.section)});
+    }else Object.assign(p,{departmentGroup:'staff',department:clean(r.department)});
     s.schoolIdentities=s.schoolIdentities.filter(x=>x.patientId!==p.id);s.schoolIdentities.push({sourceId:r.sourceId,patientId:p.id,schoolId:p.schoolId,cards:r.cards.map(clean)});updated++;
   }
   if(updated)s.schoolUpdatedAt=now;s.schoolSync={at:now,updated,conflicts};s.audit.push({action:'school-identity-update',actor:actor.name,at:now,updated,conflicts:conflicts.length});return {updated,conflicts};
