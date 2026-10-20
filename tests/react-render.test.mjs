@@ -15,6 +15,8 @@ test("React fields retain searchable education choices, labels and escaped patie
     const { Field, Badge } = await server.ssrLoadModule(
       "/src/components/ui.jsx",
     );
+    assert.match(renderToStaticMarkup(React.createElement(Badge, null, "No active visit")), /badge-neutral/);
+    assert.doesNotMatch(renderToStaticMarkup(React.createElement(Badge, null, "In clinic")), /badge-success|badge-neutral/);
     const html = renderToStaticMarkup(
       React.createElement(Field, {
         label: "Program",

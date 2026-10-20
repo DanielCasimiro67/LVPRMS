@@ -15,3 +15,6 @@ Local evidence, outside shipped source:
 `C:/Users/daniel/.codex/visualizations/2026/10/14/01a13b68-dfae-75e1-829c-f8f6a7841f08/react-parity-2026-10-21/`
 
 Includes `result.json`, `patients.png`, `patient-record.png`, and `referrals.png`. The broader route sweep remains under `react-migration/desktop-smoke.json`. This correction addresses the identified migration differences; it does not claim a new pixel comparison of every historical Figma frame.
+
+## Subsequent approved status-color correction
+The user replaced the historical green visit-status styling: In clinic is blue for every patient type; No active visit is neutral gray. Record complete remains green and Record incomplete remains yellow. Removed the Staff-specific success override. Verified computed colors for student and staff rows and the inactive visitor at 1440x960, no page errors. Full suite still 148 passed; production build passed. Screenshot: patient-status-colors-2026-10-21.png in the same visualization root. This supersedes the earlier staff/no-active green parity restoration above.

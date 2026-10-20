@@ -87,7 +87,7 @@ export function Patients() {
                   </Badge>
                 )}
               </div>
-              <Badge className={p.type === "staff" ? "badge-success" : ""}>
+              <Badge>
                 {c.data.visits.some(
                   (v) => v.patientId === p.id && v.state !== "Completed",
                 )

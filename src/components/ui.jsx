@@ -242,7 +242,7 @@ export function Badge({ children, className = "" }) {
           "Record incomplete": "badge-waiting",
           "Awaiting doctor reply": "badge-waiting",
           "Resting in clinic": "badge-success",
-          "No active visit": "badge-success",
+          "No active visit": "badge-neutral",
         }[children] || "") +
         " " +
         className
