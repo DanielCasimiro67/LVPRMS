@@ -233,7 +233,7 @@ export function Referrals() {
     <>
       <Heading sub="Track contact, replies, and actions.">Referrals</Heading>
       <Card title="Follow-ups" icon="patients">
-        <nav className="actions">
+        <nav className="actions" aria-label="Referral status filters">
           {[["", "All follow-ups"], ...referralStates.map((x) => [x, x])].map(
             ([v, l]) => (
               <Button
@@ -248,29 +248,9 @@ export function Referrals() {
         </nav>
         {c.data.referrals
           .filter((r) => !filter || filter === r.state)
-          .map((r) => {
-            const v = c.data.visits.find((v) => v.id === r.visitId);
-            return (
-              <article className="patient-row" key={r.id}>
-                <div className="patient-info">
-                  <strong>
-                    {c.data.patients.find((p) => p.id === r.patientId)?.name ||
-                      "Patient unavailable"}
-                  </strong>
-                  <p>{r.reason}</p>
-                  <p className="small muted">
-                    {v
-                      ? v.state === "Completed"
-                        ? "Checked out · " + (v.outcome || "Visit completed")
-                        : "In clinic"
-                      : "Visit not linked"}
-                  </p>
-                </div>
-                <Badge>{r.state}</Badge>
-                <Button to={"/referrals/" + r.id}>Open</Button>
-              </article>
-            );
-          })}
+          .map((r) => (
+            <ReferralRow key={r.id} state={c.data} referral={r} />
+          ))}
         {!c.data.referrals.some((r) => !filter || filter === r.state) && (
           <p>
             No follow-ups match this filter. To prepare a referral, open a saved
@@ -279,6 +259,32 @@ export function Referrals() {
         )}
       </Card>
     </>
+  );
+}
+export function ReferralRow({ state, referral: r }) {
+  const visit = state.visits.find((v) => v.id === r.visitId);
+  const patient = state.patients.find(
+    (p) => p.id === (visit?.patientId || r.patientId),
+  );
+  return (
+    <article className="patient-row">
+      <div className="patient-info">
+        <strong>{patient?.name || "Patient unavailable"}</strong>
+        <p className="small muted">
+          {r.reason || visit?.complaint || "Reason not recorded"} ·{" "}
+          {when(r.updatedAt || r.preparedAt)}
+        </p>
+        <p className="small muted">
+          {!visit
+            ? "Visit not linked"
+            : visit.state === "Completed"
+              ? "Checked out · " + (visit.outcome || "Visit completed")
+              : "In clinic"}
+        </p>
+      </div>
+      <Badge>{r.state}</Badge>
+      <Button to={"/referrals/" + r.id}>Open</Button>
+    </article>
   );
 }
 function ReferralForm({ referral: r, visit, patient, action }) {

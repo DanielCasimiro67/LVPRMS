@@ -223,7 +223,7 @@ export function Identity({ patient: p }) {
     </div>
   );
 }
-export function Badge({ children }) {
+export function Badge({ children, className = "" }) {
   return (
     <span
       className={
@@ -236,9 +236,16 @@ export function Badge({ children }) {
           "Missing recipient": "badge-missing-recipient",
           "In stock": "badge-success",
           "Low stock": "badge-waiting",
-          "Out of stock": "badge-failed",
+          "Out of stock": "badge-waiting",
           Resolved: "badge-success",
-        }[children] || "")
+          "Record complete": "badge-success",
+          "Record incomplete": "badge-waiting",
+          "Awaiting doctor reply": "badge-waiting",
+          "Resting in clinic": "badge-success",
+          "No active visit": "badge-success",
+        }[children] || "") +
+        " " +
+        className
       }
     >
       {children}

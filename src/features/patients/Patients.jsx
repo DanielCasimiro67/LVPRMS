@@ -80,14 +80,14 @@ export function Patients() {
                 <strong>{p.name}</strong>
                 <p className="small muted">{patientDescription(p)}</p>
                 {c.mode === "demo" && (
-                  <span className="small muted">
+                  <Badge>
                     {profileCompletion(c.data, p).complete
                       ? "Record complete"
                       : "Record incomplete"}
-                  </span>
+                  </Badge>
                 )}
               </div>
-              <Badge>
+              <Badge className={p.type === "staff" ? "badge-success" : ""}>
                 {c.data.visits.some(
                   (v) => v.patientId === p.id && v.state !== "Completed",
                 )
@@ -428,16 +428,32 @@ export function Record() {
               {missing.complete ? "Record complete" : "Record incomplete"}
             </Badge>
             {!missing.complete && (
-              <p>To finish: {missing.missing.join(", ")}</p>
+              <Notice title="Details to finish" kind="warning">
+                {missing.missing.join(" · ")}
+              </Notice>
             )}
           </>
         )}
-        <p>School ID: {p.schoolId || "Not recorded"}</p>
-        <p>Personal contact: {p.contact || "Not recorded"}</p>
-        <p>
-          Emergency contact: {p.emergencyName || "Not recorded"} ·{" "}
-          {p.emergencyPhone || "Not recorded"}
-        </p>
+        <div className="profile-summary">
+          {[
+            [
+              "Department",
+              departments.find(
+                ([value]) => value === profileDraft(c.data, p).departmentGroup,
+              )?.[1],
+            ],
+            ["School ID", p.schoolId],
+            ["RFID", profileDraft(c.data, p).rfid || p.rfid],
+            ["Personal contact", p.contact],
+            ["Emergency contact", p.emergencyName],
+            ["Emergency number", p.emergencyPhone],
+            ["Relationship", p.emergencyRelationship],
+          ].map(([label, value]) => (
+            <p key={label}>
+              <strong>{label}:</strong> {value || "Not recorded"}
+            </p>
+          ))}
+        </div>
         <p className="muted">
           Allergy: {p.allergy || "Not recorded"} · Blood type:{" "}
           {p.bloodType || "Not recorded"}
